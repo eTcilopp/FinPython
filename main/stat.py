@@ -52,7 +52,7 @@ def run(ticker_name: str):
         
         # pass
     # data.reset_index().to_sql('price_data', engine, if_exists='replace', index=False)
-    # TODO: Something not right here. Need to add index. The data in the database is different from I see in the frame..
+    # TODO: Why do you need override here? Verify..
     # TODO: Move database stuff to another module
     
     
