@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, Float, String, Date, ForeignKey, create_engine
+from sqlalchemy import Column, Integer, Float, String, Date, DateTime, ForeignKey, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 from sqlalchemy.schema import PrimaryKeyConstraint
+from sqlalchemy.sql import func
 
 
 class Database:
@@ -23,11 +24,6 @@ class Tickers(Base):
 
 class PriceData(Base):
     __tablename__ = 'price_data'
-    # __table_args__ = (
-    #     PrimaryKeyConstraint('ticker_id', 'date'), {}
-    # )
-
-    # id: Mapped[int] = mapped_column(primary_key=True)
     ticker_id = Column(Integer, ForeignKey('tickers.id'), primary_key=True)
     date = Column(Date, primary_key=True)
     open = Column(Float)
@@ -37,4 +33,15 @@ class PriceData(Base):
     close = Column(Float)
     adj_close = Column(Float)
     volume = Column(Integer)
+
+class SRCalculations(Base):
+    __tablename__ = 'sharpe_ratio_calc'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    ticker_id = Column(Integer, ForeignKey('tickers.id'))
+    calc_date = Column(DateTime(timezone=True), server_default=func.now())
+    data_start_date = Column(Date)
+    data_end_date = Column(Date)
+    asr = Column(Float)
+    
     
