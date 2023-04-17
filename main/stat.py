@@ -3,7 +3,7 @@ from pandas_datareader import data as pdr
 import yfinance as yf
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Tickers
+from models import Tickers, PriceData
 
 
 def run(ticker_name: str):
@@ -15,7 +15,7 @@ def run(ticker_name: str):
     # data.reset_index()
     # ticker = yf.Ticker(ticker_name)
     # hist = ticker.history(period="2y")
-    engine = create_engine("sqlite:///stocks_data.db", echo=True)
+    engine = create_engine("sqlite:///stocks_data.db", echo=False)
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -25,11 +25,38 @@ def run(ticker_name: str):
     else:
         # TODO: Add to the database
         pass
-    data['ticker_id'] = ticker_id
-    data.reset_index().to_sql('price_data', engine, if_exists='replace', index=False)
+    # data['ticker_id'] = ticker_id
+    # data.set_index('Date')
+    new_objects = []
+    for _, row in data.reset_index().iterrows():
+        existing_record = session.query(PriceData).filter(PriceData.ticker_id==ticker_id, PriceData.date==row['Date']).first()
+        if existing_record is not None:
+            if existing_record.adj_close == row['Adj Close']:
+                continue
+            existing_record.delete()
+            session.commit()
+            
+        params = {
+            'ticker_id': ticker_id,
+            'date': row['Date'],
+            'open': row['Open'],
+            'high': row['High'],
+            'low': row['Low'],
+            'close': row['Close'],
+            'adj_close': row['Adj Close'],
+            'volume': row['Volume']
+        }
+        new_objects.append(PriceData(**params))
+    session.add_all(new_objects)
+    session.commit()
+        
+        # pass
+    # data.reset_index().to_sql('price_data', engine, if_exists='replace', index=False)
+    # TODO: Something not right here. Need to add index. The data in the database is different from I see in the frame..
+    # TODO: Move database stuff to another module
     
     
 
 if __name__=='__main__':
-    run('MSFT')
+    run('ADBE')
     print('All done!')
