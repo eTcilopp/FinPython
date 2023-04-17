@@ -1,6 +1,13 @@
-from sqlalchemy import Column, Integer, Float, String, Date, ForeignKey
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import Column, Integer, Float, String, Date, ForeignKey, create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 from sqlalchemy.schema import PrimaryKeyConstraint
+
+
+class Database:
+    def __init__(self, database_location: str, echo=False):
+        self.engine = create_engine(database_location, echo=echo)
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
 class Base(DeclarativeBase):
     pass
