@@ -2,9 +2,11 @@ import yfinance as yf
 from pyfinviz import Screener
 
 
-def get_tickers(to_page):
-
-    screener = Screener(pages=[x for x in range(1, to_page)])
+def get_tickers(to_page=None):
+    if to_page is not None:
+        screener = Screener(pages=[x for x in range(1, to_page)])
+    else:
+        screener = Screener()    
     ticker_lst = []
     for i in range(0, to_page):
         dataframe = screener.data_frames[i]
@@ -14,7 +16,8 @@ def get_tickers(to_page):
     return ticker_lst
 
 if __name__=='__main__':
-    page = 5
-    get_tickers(page)
+    from_page = 1
+    to_page = 3
+    get_tickers(from_page, to_page)
     print('all done')
 
