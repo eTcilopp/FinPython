@@ -12,7 +12,7 @@ def get_tickers(to_page):
         dataframe = screener.data_frames[i]
         if dataframe is not None:
             dataframe = get_filtered_dataframe(dataframe)
-            ticker_lst += dataframe[['Ticker', 'Company']].values.tolist()
+            ticker_lst += dataframe[['Ticker', 'Company', 'Industry']].values.tolist()
     return ticker_lst
 
 if __name__=='__main__':

@@ -19,6 +19,7 @@ class Tickers(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     ticker = Column(String)
     company = Column(String)
+    industry = Column(String)
     
     def __repr__(self) -> str:
         return self.ticker

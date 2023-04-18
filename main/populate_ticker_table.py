@@ -6,6 +6,11 @@ def run(pages, session):
         for ticker in fetched_data:
             if new_ticker == ticker[0]:
                 return ticker[1]
+    def get_industry(new_ticker):
+        for ticker in fetched_data:
+            if new_ticker == ticker[0]:
+                return ticker[2]
+        
     
     existing_tickers = [el[0] for el in session.query(Tickers.ticker).all()]
     fetched_data = get_tickers(pages)   # TODO: Make as variable
@@ -17,7 +22,8 @@ def run(pages, session):
     for new_ticker in new_tickers:
         params = {
             'ticker': new_ticker,
-            'company': get_company(new_ticker)
+            'company': get_company(new_ticker),
+            'industry': get_industry(new_ticker)
         }
         new_objects.append(Tickers(**params))
     
