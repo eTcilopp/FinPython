@@ -25,6 +25,7 @@ def run(pages, session):
     session.commit()
 
 if __name__=='__main__':
+    pages = 300
     db = Database("sqlite:///stocks_data.db")
     session = db.session
-    run(50, session)
+    run(pages, session)

@@ -16,8 +16,9 @@ class Base(DeclarativeBase):
 class Tickers(Base):
     __tablename__ = 'tickers'
     
-    id: Mapped[int] = mapped_column(primary_key=True)
-    ticker: Mapped[str] = mapped_column(String(10), unique=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    ticker = Column(String)
+    company = Column(String)
     
     def __repr__(self) -> str:
         return self.ticker

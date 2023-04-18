@@ -71,7 +71,7 @@ def run(session, ticker, start_date: str, end_date: str, write_to_db=False):
 # TODO: ADD USAGE OF SAVED DATA
 
 if __name__=='__main__':
-    ticker_str = 'MSFT'
+    asr_threshold = 0.9
     start_date = '2020-03-01'
     end_date = '2023-03-01'
     
@@ -79,12 +79,13 @@ if __name__=='__main__':
     session = db.session
     
     tickers = session.query(Tickers).all()
-    tickers = tickers[:300]  # TODO: Remove me
+    # tickers = tickers[:300]  # TODO: Remove me
     
     for ticker_obj in tickers:
         data = run(session, ticker_obj, start_date, end_date, write_to_db=False)
         asr = get_sharpe_ratio(data)
-        if asr < 1:
+        # print(asr)
+        if asr < asr_threshold:
             continue
         params = {
             'ticker_id': ticker_obj.id,
