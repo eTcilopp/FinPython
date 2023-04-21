@@ -82,7 +82,7 @@ if __name__=='__main__':
     # tickers = tickers[:300]  # TODO: Remove me
     
     for ticker_obj in tickers:
-        data = run(session, ticker_obj, start_date, end_date, write_to_db=False)
+        data = run(session, ticker_obj, start_date, end_date, write_to_db=True)
         asr = get_sharpe_ratio(data)
         # print(asr)
         if asr < asr_threshold:
