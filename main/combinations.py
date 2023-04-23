@@ -1,4 +1,4 @@
-from models import Database, SRCalculations, Tickers, PriceData
+from models import Database, SRCalculations, Tickers, PriceData, PortfolioCalculations
 from  itertools import combinations 
 
 import pandas as pd
@@ -49,6 +49,15 @@ def get_portfolio_sharpe_rate(stocks, num_ports=5000):
     
     return max_sr, max_weights
 
+def save_to_database(portfolio_tickers, portfolio_weights, portfolio_sr):
+    portfolio = str({el[0]: el[1] for el in zip(portfolio_tickers, portfolio_weights)})
+    portfolio_record = PortfolioCalculations(
+        portfolio= portfolio,
+        sharpe_ratio= portfolio_sr
+    )
+    session.add(portfolio_record)
+    session.commit()
+
 
     
 
@@ -60,7 +69,8 @@ def run(portfolio_size, sharpe_ratio_threshold):
         dataframe = get_dataframe(combination)
         portfolio_sr, portfolio_weights = get_portfolio_sharpe_rate(dataframe, num_ports=5000)
         print(f'Sharpe Ratio: {portfolio_sr}, weigts: {portfolio_weights}')
-        pass
+        save_to_database(combination, portfolio_weights, portfolio_sr)
+
 
 if __name__ == '__main__':
     db = Database("sqlite:///stocks_data.db")
@@ -68,3 +78,4 @@ if __name__ == '__main__':
     portfolio_size = 4
     sharpe_ratio_threshold = 1.2
     run(portfolio_size, sharpe_ratio_threshold)
+    print('All done!')

@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, Float, String, Date, DateTime, ForeignKe
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 from sqlalchemy.schema import PrimaryKeyConstraint
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.mutable import MutableDict
 
 class Database:
@@ -50,7 +49,7 @@ class SRCalculations(Base):
 class PortfolioCalculations(Base):
     __tablename__ = 'portfolio_calc'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    portfolio = Column(MutableDict.as_mutable(JSONB))
+    portfolio = Column(String)
     sharpe_ratio = Column(Float)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     
